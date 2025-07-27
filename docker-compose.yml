@@ -1,0 +1,35 @@
+# Versión del formato del archivo docker-compose
+version: '3.8'
+
+# Aquí definimos nuestros contenedores (llamados "servicios")
+services:
+
+  # Primer servicio: La base de datos
+  db:
+    image: mysql:5.7             # Usa la imagen oficial de MySQL, versión 5.7 (muy compatible con WordPress)
+    volumes:
+      - db_data:/var/lib/mysql   # Persiste los datos de la base de datos en un "volumen"
+    restart: always              # Siempre reinicia el contenedor si se cae
+    environment:
+      MYSQL_ROOT_PASSWORD: CAMBIAR_ESTA_CLAVE_SECRETA
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpressuser
+      MYSQL_PASSWORD: CAMBIAR_ESTA_CLAVE_SECRETA
+
+  # Segundo servicio: La aplicación WordPress
+  wordpress:
+    depends_on:
+      - db                       # Le dice a Docker que inicie este contenedor DESPUÉS de que la base de datos esté lista
+    image: wordpress:latest      # Usa la última imagen oficial de WordPress
+    ports:
+      - "8000:80"                # Mapea el puerto 8000 de tu servidor al puerto 80 del contenedor
+    restart: always              # Siempre reinicia el contenedor si se cae
+    environment:
+      WORDPRESS_DB_HOST: db:3306 # El host de la DB es el nombre del servicio 'db'
+      WORDPRESS_DB_USER: wordpressuser
+      WORDPRESS_DB_PASSWORD: CAMBIAR_ESTA_CLAVE_SECRETA
+      WORDPRESS_DB_NAME: wordpress
+
+# Docker gestionará la creación de este volumen por nosotros
+volumes:
+  db_data:
