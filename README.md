@@ -1,4 +1,4 @@
-# Proyecto 5: Despliegue de WordPress con Docker y Docker Compose
+# Despliegue de WordPress con Docker y Docker Compose
 
 ## 1. Descripción del Proyecto
 
